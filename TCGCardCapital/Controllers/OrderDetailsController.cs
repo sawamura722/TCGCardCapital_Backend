@@ -39,17 +39,17 @@ namespace TCGCardCapital.Controllers
             return Ok(orderDetail);
         }
 
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "USER")]
         [HttpPost]
-        public async Task<ActionResult<OrderDetail>> PostOrderDetail([FromBody] OrderDetailDTO orderDetailDTO)
+        public async Task<ActionResult<OrderDetail>> PostOrderDetail([FromForm] OrderDetailDTO orderDetailDTO)
         {
             var createdOrderDetail = await _orderDetailService.CreateOrderDetailAsync(orderDetailDTO);
             return CreatedAtAction(nameof(GetOrderDetails), new { id = createdOrderDetail.OrderDetailId }, createdOrderDetail);
         }
 
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "USER")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrderDetail(int id, [FromBody] OrderDetailDTO orderDetailDTO)
+        public async Task<IActionResult> PutOrderDetail(int id, [FromForm] OrderDetailDTO orderDetailDTO)
         {
             if (await _orderDetailService.UpdateOrderDetailAsync(id, orderDetailDTO))
             {
@@ -58,7 +58,7 @@ namespace TCGCardCapital.Controllers
             return BadRequest();
         }
 
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "USER")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrderDetail(int id)
         {

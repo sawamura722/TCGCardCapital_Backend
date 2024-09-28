@@ -17,6 +17,7 @@ namespace TCGCardCapital.Extensions
             services.AddScoped<ITournamentRankingService, TournamentRankingService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
         }
     }
 }

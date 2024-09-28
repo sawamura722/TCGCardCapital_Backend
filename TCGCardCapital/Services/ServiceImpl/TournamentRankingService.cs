@@ -49,5 +49,21 @@ namespace TCGCardCapital.Services.ServiceImpl
 
             return false;
         }
+
+        public async Task<bool> DeleteRankingsByTournamentIdAsync(int tournamentId)
+        {
+            var rankings = await _context.Rankings
+                .Where(t => t.TournamentId == tournamentId)
+                .ToListAsync();
+
+            if (rankings.Any())
+            {
+                _context.Rankings.RemoveRange(rankings);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false; // No rankings found
+        }
     }
 }

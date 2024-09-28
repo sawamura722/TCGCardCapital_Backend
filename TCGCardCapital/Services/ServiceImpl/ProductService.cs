@@ -100,18 +100,40 @@ namespace TCGCardCapital.Services.ServiceImpl
 
         public async Task<bool> DeleteProductAsync(int id)
         {
-            // First, remove related cart items
-            var cartItems = await _context.CartItems.Where(ci => ci.ProductId == id).ToListAsync();
-            _context.CartItems.RemoveRange(cartItems);
+            // First, delete all related order details
+            var orderDetails = await _context.OrderDetails
+                .Where(od => od.ProductId == id)
+                .ToListAsync();
 
-            // Then, remove the product
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            if (orderDetails.Any())
             {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
+                _context.OrderDetails.RemoveRange(orderDetails);
+                await _context.SaveChangesAsync(); // Save changes to remove order details
             }
+
+            // Next, delete all related cart items
+            var cartItems = await _context.CartItems
+                .Where(ci => ci.ProductId == id)
+                .ToListAsync();
+
+            if (cartItems.Any())
+            {
+                _context.CartItems.RemoveRange(cartItems);
+                await _context.SaveChangesAsync(); // Save changes to remove cart items
+            }
+
+            // Now delete the product
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return false; // Product not found
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync(); // Save changes to remove the product
+
             return true;
         }
+
     }
 }

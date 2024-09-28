@@ -2,7 +2,7 @@
 {
     public class RewardDTO
     {
-        public int RewardId { get; set; }
+        public int? RewardId { get; set; }
 
         public string RewardName { get; set; } = null!;
 

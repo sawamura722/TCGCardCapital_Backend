@@ -74,5 +74,16 @@ namespace TCGCardCapital.Controllers
             return NotFound();
         }
 
+        [Authorize(Roles = "USER")]
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteAllCartItem(int userId)
+        {
+            if (await _cartitemService.DeleteAllCartItemAsync(userId))
+            {
+                return NoContent();
+            }
+            return NotFound();
+        }
+
     }
 }

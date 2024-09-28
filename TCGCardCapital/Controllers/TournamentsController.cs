@@ -41,7 +41,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpPost]
-        public async Task<ActionResult<Tournament>> PostTournament([FromBody] TournamentDTO tournamentDTO)
+        public async Task<ActionResult<Tournament>> PostTournament([FromForm] TournamentDTO tournamentDTO)
         {
             var createdTournament = await _tournamentService.CreateTournamentAsync(tournamentDTO);
             return CreatedAtAction(nameof(GetTournament), new { id = createdTournament.TournamentId }, createdTournament);
@@ -49,7 +49,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTournament(int id, [FromBody] TournamentDTO tournamentDTO)
+        public async Task<IActionResult> PutTournament(int id, [FromForm] TournamentDTO tournamentDTO)
         {
             if (await _tournamentService.UpdateTournamentAsync(id, tournamentDTO))
             {

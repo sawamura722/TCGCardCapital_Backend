@@ -41,10 +41,13 @@ namespace TCGCardCapital.Services.ServiceImpl
 
         public async Task<bool> UpdateTournamentAsync(int id, TournamentDTO tournamentDTO)
         {
-            if (id != tournamentDTO.TournamentId) return false;
+            var tournament = await _context.Tournaments.FindAsync(id);
+            if(tournament == null) return false;
 
-            var tournament = _mapper.Map<Tournament>(tournamentDTO);
-            _context.Entry(tournament).State = EntityState.Modified;
+            tournament.Name = tournamentDTO.Name;
+            tournament.Description = tournamentDTO.Description;
+            tournament.Date = tournamentDTO.Date;
+            tournament.Location = tournamentDTO.Location;
 
             try
             {
@@ -61,6 +64,16 @@ namespace TCGCardCapital.Services.ServiceImpl
 
         public async Task<bool> DeleteTournamentAsync(int id)
         {
+            var ranking = await _context.Rankings
+                .Where(t => t.TournamentId == id)
+                .ToListAsync();
+
+            if (ranking.Any())
+            {
+                _context.Rankings.RemoveRange(ranking);
+                await _context.SaveChangesAsync();
+            }
+
             var tournament = await _context.Tournaments.FindAsync(id);
             if (tournament == null) return false;
 

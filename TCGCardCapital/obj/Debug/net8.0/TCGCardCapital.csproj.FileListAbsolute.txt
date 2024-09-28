@@ -253,3 +253,4 @@ D:\Coding File\CS\TCGCardCapital\TCGCardCapital\obj\Debug\net8.0\refint\TCGCardC
 D:\Coding File\CS\TCGCardCapital\TCGCardCapital\obj\Debug\net8.0\TCGCardCapital.pdb
 D:\Coding File\CS\TCGCardCapital\TCGCardCapital\obj\Debug\net8.0\TCGCardCapital.genruntimeconfig.cache
 D:\Coding File\CS\TCGCardCapital\TCGCardCapital\obj\Debug\net8.0\ref\TCGCardCapital.dll
+D:\Coding File\CS\TCGCardCapital\TCGCardCapital\obj\Debug\net8.0\TCGCardCapital.sourcelink.json

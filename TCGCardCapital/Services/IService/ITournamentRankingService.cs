@@ -6,5 +6,7 @@ namespace TCGCardCapital.Services.IService
     {
         Task<IEnumerable<TournamentRankingDTO>> GetRankingByTournamentIdAsync(int tournamentId);
         Task<bool> UpdateUserRankAsync(int tournamentId, int userId, int rank);
+
+        Task<bool> DeleteRankingsByTournamentIdAsync(int tournamentId);
     }
 }

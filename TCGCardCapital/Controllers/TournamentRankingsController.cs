@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TCGCardCapital.DTOs;
 using TCGCardCapital.Services.IService;
+using TCGCardCapital.Services.ServiceImpl;
 
 namespace TCGCardCapital.Controllers
 {
@@ -28,7 +29,7 @@ namespace TCGCardCapital.Controllers
         // Update user rank by tournament id and user id
         [Authorize(Roles = "ADMIN")]
         [HttpPut("{tournamentId}/{userId}")]
-        public async Task<IActionResult> UpdateUserRank(int tournamentId, int userId, [FromBody] int rank)
+        public async Task<IActionResult> UpdateUserRank(int tournamentId, int userId, int rank)
         {
             var result = await _tournamentRankingService.UpdateUserRankAsync(tournamentId, userId, rank);
             if (result)
@@ -37,6 +38,19 @@ namespace TCGCardCapital.Controllers
             }
 
             return NotFound(); 
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpDelete("{tournamentId}")]
+        public async Task<IActionResult> DeleteTournamentRankingsByTournamentId(int tournamentId)
+        {
+            var result = await _tournamentRankingService.DeleteRankingsByTournamentIdAsync(tournamentId);
+            if (result)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }

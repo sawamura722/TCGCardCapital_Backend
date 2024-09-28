@@ -33,7 +33,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "USER")]
         [HttpPost]
-        public async Task<IActionResult> RegisterUserForTournament([FromBody] TournamentRegistrationDTO registrationDTO)
+        public async Task<IActionResult> RegisterUserForTournament([FromForm] TournamentRegistrationDTO registrationDTO)
         {
             var result = await _tournamentRegistrationService.RegisterUserForTournamentAsync(registrationDTO);
             if (result)

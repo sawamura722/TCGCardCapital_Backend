@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TCGCardCapital.DTOs;
@@ -109,6 +110,19 @@ namespace TCGCardCapital.Services.ServiceImpl
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> DeleteAllCartItemAsync(int userId)
+        {
+            var cartitem = await _context.CartItems
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cartitem == null) return false;
+
+            _context.CartItems.Remove(cartitem);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
     }
 }

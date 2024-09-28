@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TCGCardCapital.DTOs;
 using TCGCardCapital.Services.IService;
 
@@ -46,5 +47,6 @@ namespace TCGCardCapital.Controllers
                 return Unauthorized(token);
             return Ok(new { Token = token });
         }
+
     }
 }

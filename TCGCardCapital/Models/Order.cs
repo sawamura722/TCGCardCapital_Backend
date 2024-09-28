@@ -17,6 +17,10 @@ public partial class Order
 
     public string Location { get; set; } = null!;
 
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual User User { get; set; } = null!;

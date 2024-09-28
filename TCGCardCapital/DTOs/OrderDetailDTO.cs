@@ -2,7 +2,7 @@
 {
     public class OrderDetailDTO
     {
-        public int OrderDetailId { get; set; }
+        public int? OrderDetailId { get; set; }
 
         public int OrderId { get; set; }
 

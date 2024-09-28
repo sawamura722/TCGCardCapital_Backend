@@ -37,7 +37,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "USER")]
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder([FromBody] OrderDTO orderDTO)
+        public async Task<ActionResult<Order>> PostOrder([FromForm] OrderDTO orderDTO)
         {
             var createdOrder = await _orderService.CreateOrderAsync(orderDTO);
             return CreatedAtAction(nameof(GetOrders), new { id = createdOrder.OrderId }, createdOrder);
@@ -45,7 +45,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "USER")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, [FromBody] OrderDTO orderDTO)
+        public async Task<IActionResult> PutOrder(int id, [FromForm] OrderDTO orderDTO)
         {
             if (await _orderService.UpdateOrderAsync(id, orderDTO))
             {
