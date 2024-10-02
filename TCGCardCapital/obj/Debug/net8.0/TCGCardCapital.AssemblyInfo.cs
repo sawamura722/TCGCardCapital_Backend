@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TCGCardCapital")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8918fe4d4ee0a77d6739cab060a13ed515889ba6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+91fed44ccf317c11a6ee02cc331dfec635555f4d")]
 [assembly: System.Reflection.AssemblyProductAttribute("TCGCardCapital")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TCGCardCapital")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

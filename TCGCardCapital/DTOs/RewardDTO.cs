@@ -10,6 +10,8 @@
 
         public int PointsRequired { get; set; }
 
-        public bool? IsExtraReward { get; set; }
+        public bool IsExtraReward { get; set; }
+        public string? ImageUrl { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

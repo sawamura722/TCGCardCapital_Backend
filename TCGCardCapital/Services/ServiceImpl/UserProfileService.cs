@@ -17,6 +17,12 @@ namespace TCGCardCapital.Services.ServiceImpl
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<UserProfileDTO>> GetUsersAsync()
+        {
+            var users = await _context.Users.ToListAsync();
+            return _mapper.Map<IEnumerable<UserProfileDTO>>(users);
+        }
+
         public async Task<UserProfileDTO> GetUserProfileByUserIdAsync(int userId)
         {
             var user = await _context.Users.FindAsync(userId);
@@ -47,6 +53,65 @@ namespace TCGCardCapital.Services.ServiceImpl
                 throw;
             }
         }
-  
+
+        public async Task<bool> BuySubscription(int userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            user.SubscriptionStatus = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Users.Any(u => u.UserId == userId))
+                    return false;
+                throw;
+            }
+        }
+
+        public async Task<bool> IncreasePoint(int userId, IncreasePointDTO increasePointDTO)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            user.Point += increasePointDTO.Point;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Users.Any(u => u.UserId == userId))
+                    return false;
+                throw;
+            }
+        }
+
+        public async Task<bool> DecreasePoint(int userId, IncreasePointDTO increasePointDTO)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            user.Point -= increasePointDTO.Point;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Users.Any(u => u.UserId == userId))
+                    return false;
+                throw;
+            }
+        }
     }
 }

@@ -157,6 +157,9 @@ public partial class TcgcardCapitalContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Description).HasColumnType("text");
+            entity.Property(e => e.ImageUrl)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.IsExtraReward).HasDefaultValue(false);
             entity.Property(e => e.RewardName)
                 .HasMaxLength(255)

@@ -39,7 +39,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<ActionResult<Category>> PostCategory([FromForm] CategoryDTO categoryDTO)
         {
             var createdCategory = await _categoryService.CreateCategoryAsync(categoryDTO);
             return CreatedAtAction(nameof(GetCategories), new { id = createdCategory.CategoryId }, createdCategory);
@@ -47,7 +47,7 @@ namespace TCGCardCapital.Controllers
 
         [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id,[FromBody] CategoryDTO categoryDTO)
+        public async Task<IActionResult> PutCategory(int id,[FromForm] CategoryDTO categoryDTO)
         {
             if (await _categoryService.UpdateCategoryAsync(id, categoryDTO))
             {

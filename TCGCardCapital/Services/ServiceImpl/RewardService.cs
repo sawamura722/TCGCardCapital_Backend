@@ -33,41 +33,91 @@ namespace TCGCardCapital.Services.ServiceImpl
 
         public async Task<RewardDTO> CreateRewardAsync(RewardDTO rewardDTO)
         {
-            var reward = _mapper.Map<Reward>(rewardDTO);
-            reward.CreatedAt = DateTime.Now;
+            if (rewardDTO.Image != null)
+            {
+                // Generate a unique file name
+                var fileName = Guid.NewGuid() + Path.GetExtension(rewardDTO.Image.FileName);
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+                var uniqueFilePath = Path.Combine(uploadsFolder, fileName);
 
+                // Ensure the upload directory exists
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Save the file to disk
+                using (var stream = new FileStream(uniqueFilePath, FileMode.Create))
+                {
+                    await rewardDTO.Image.CopyToAsync(stream);
+                }
+
+                // Save only the file name in the DTO
+                rewardDTO.ImageUrl = fileName; // Save just the filename or a relative path
+            }
+
+            // Map DTO to Product entity
+            var reward = _mapper.Map<Reward>(rewardDTO);
             _context.Rewards.Add(reward);
             await _context.SaveChangesAsync();
 
+            // Return the mapped ProductDTO
             return _mapper.Map<RewardDTO>(reward);
         }
 
         public async Task<bool> UpdateRewardAsync(int id, RewardDTO rewardDTO)
         {
-            var existingReward = await _context.Rewards.FindAsync(id);
+            var reward = await _context.Rewards.FindAsync(id);
+            if (reward == null) return false;
 
-            if (existingReward == null)
-                return false;
+            // Define the uploads folder path
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
 
-            _mapper.Map(rewardDTO, existingReward);
-
-            existingReward.UpdatedAt = DateTime.Now;
-
-            _context.Entry(existingReward).State = EntityState.Modified;
-
-            try
+            // If a new image is provided
+            if (rewardDTO.Image != null)
             {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Rewards.Any(r => r.RewardId == id))
-                    return false;
+                // If there's an existing image, delete it
+                if (!string.IsNullOrEmpty(reward.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(uploadsFolder, reward.ImageUrl);
+                    if (File.Exists(oldImagePath))
+                    {
+                        File.Delete(oldImagePath); // Delete the old image
+                    }
+                }
 
-                throw;
+                // Save the new image
+                var fileName = Guid.NewGuid() + Path.GetExtension(rewardDTO.Image.FileName);
+                var uniqueFilePath = Path.Combine(uploadsFolder, fileName);
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                using (var stream = new FileStream(uniqueFilePath, FileMode.Create))
+                {
+                    await rewardDTO.Image.CopyToAsync(stream);
+                }
+
+                // Update the reward's ImageUrl with the new file name
+                rewardDTO.ImageUrl = fileName;
             }
+
+            // Map updated fields from rewardDTO to reward entity
+            reward.RewardName = rewardDTO.RewardName;
+            reward.Description = rewardDTO.Description;
+            reward.PointsRequired = rewardDTO.PointsRequired;
+            reward.IsExtraReward = rewardDTO.IsExtraReward;
+            reward.ImageUrl = rewardDTO.ImageUrl ?? reward.ImageUrl; // Only update if new image is provided
+
+            _context.Rewards.Update(reward);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
+
+
 
 
         public async Task<bool> DeleteRewardAsync(int id)

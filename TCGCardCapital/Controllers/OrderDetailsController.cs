@@ -19,6 +19,7 @@ namespace TCGCardCapital.Controllers
             _orderDetailService = orderDetailService;
         }
 
+        [Authorize(Roles = "ADMIN")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDetailDTO>>> GetOrderDetails()
         {
@@ -58,15 +59,5 @@ namespace TCGCardCapital.Controllers
             return BadRequest();
         }
 
-        [Authorize(Roles = "USER")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrderDetail(int id)
-        {
-            if (await _orderDetailService.DeleteOrderDetailAsync(id))
-            {
-                return NoContent();
-            }
-            return BadRequest();
-        }
     }
 }

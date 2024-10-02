@@ -48,12 +48,14 @@ namespace TCGCardCapital.Services.ServiceImpl
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<bool> UpdateOrderAsync(int id, OrderDTO orderDTO)
+        public async Task<bool> UpdateOrderAsync(int id, UpdateOrderDTO updateOrderDTO)
         {
-            if (id != orderDTO.OrderId) return false;
+            if (id != updateOrderDTO.OrderId) return false;
 
-            var order = _mapper.Map<Order>(orderDTO);
-            _context.Entry(order).State = EntityState.Modified;
+            var existingOrder = await _context.Orders.FindAsync(id);
+            if (existingOrder == null) return false;
+
+            existingOrder.Status = updateOrderDTO.Status;
 
             try
             {
@@ -68,14 +70,40 @@ namespace TCGCardCapital.Services.ServiceImpl
             }
         }
 
+
         public async Task<bool> DeleteOrderAsync(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product) // Include the related products to update the stock
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
             if (order == null) return false;
 
+            // Loop through each order detail and update the product stock
+            foreach (var orderDetail in order.OrderDetails)
+            {
+                var product = orderDetail.Product;
+
+                if (product != null)
+                {
+                    // Increase the product's stock by the order detail quantity
+                    product.Stock += orderDetail.Quantity;
+                }
+            }
+
+            // Remove all related order details first
+            _context.OrderDetails.RemoveRange(order.OrderDetails);
+
+            // Now remove the order
             _context.Orders.Remove(order);
+
+            // Save changes to the database
             await _context.SaveChangesAsync();
+
             return true;
         }
+
+
     }
 }

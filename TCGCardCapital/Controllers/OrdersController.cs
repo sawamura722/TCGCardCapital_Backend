@@ -43,18 +43,18 @@ namespace TCGCardCapital.Controllers
             return CreatedAtAction(nameof(GetOrders), new { id = createdOrder.OrderId }, createdOrder);
         }
 
-        [Authorize(Roles = "USER")]
+        [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, [FromForm] OrderDTO orderDTO)
+        public async Task<IActionResult> PutOrder(int id, [FromForm] UpdateOrderDTO updateOrderDTO)
         {
-            if (await _orderService.UpdateOrderAsync(id, orderDTO))
+            if (await _orderService.UpdateOrderAsync(id, updateOrderDTO))
             {
                 return NoContent();
             }
             return BadRequest();
         }
 
-        [Authorize(Roles = "USER")]
+        [Authorize(Roles = "ADMIN,USER")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {

@@ -50,10 +50,10 @@ namespace TCGCardCapital.Services.ServiceImpl
             return false;
         }
 
-        public async Task<bool> DeleteRankingsByTournamentIdAsync(int tournamentId)
+        public async Task<bool> DeleteRankingsByTournamentIdUserIdAsync(int tournamentId, int userId)
         {
             var rankings = await _context.Rankings
-                .Where(t => t.TournamentId == tournamentId)
+                .Where(t => t.TournamentId == tournamentId && t.UserId == userId)
                 .ToListAsync();
 
             if (rankings.Any())

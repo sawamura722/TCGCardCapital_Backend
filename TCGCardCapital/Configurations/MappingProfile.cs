@@ -19,6 +19,9 @@ namespace TCGCardCapital.Configurations
             CreateMap<OrderDetail, OrderDetailDTO>().ReverseMap();
             CreateMap<Order, OrderDTO>().ReverseMap();
             CreateMap<User, UserProfileDTO>().ReverseMap();
+            CreateMap<Order, UpdateOrderDTO>().ReverseMap();
+            CreateMap<User, IncreasePointDTO>().ReverseMap();
+            CreateMap<UserReward, UserRewardDTO>().ReverseMap();
 
             // User to UserDTO mapping, ignoring PasswordHash
             CreateMap<User, UserDTO>()

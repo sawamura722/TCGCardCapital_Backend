@@ -111,14 +111,18 @@ namespace TCGCardCapital.Services.ServiceImpl
             return true;
         }
 
-        public async Task<bool> DeleteAllCartItemAsync(int userId)
+        public async Task<bool> DeleteAllCartItemsAsync(int userId)
         {
-            var cartitem = await _context.CartItems
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+            // Retrieve all cart items for the user
+            var cartItems = await _context.CartItems
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
 
-            if (cartitem == null) return false;
+            // If no items found, return false
+            if (!cartItems.Any()) return false;
 
-            _context.CartItems.Remove(cartitem);
+            // Remove all cart items for the user
+            _context.CartItems.RemoveRange(cartItems);
             await _context.SaveChangesAsync();
             return true;
         }

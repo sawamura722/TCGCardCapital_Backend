@@ -40,11 +40,11 @@ namespace TCGCardCapital.Controllers
             return NotFound(); 
         }
 
-        [Authorize(Roles = "ADMIN")]
-        [HttpDelete("{tournamentId}")]
-        public async Task<IActionResult> DeleteTournamentRankingsByTournamentId(int tournamentId)
+        [Authorize(Roles = "ADMIN,USER")]
+        [HttpDelete("{tournamentId}/{userId}")]
+        public async Task<IActionResult> DeleteTournamentRankingsByTournamentIdUserId(int tournamentId, int userId)
         {
-            var result = await _tournamentRankingService.DeleteRankingsByTournamentIdAsync(tournamentId);
+            var result = await _tournamentRankingService.DeleteRankingsByTournamentIdUserIdAsync(tournamentId, userId);
             if (result)
             {
                 return NoContent();

@@ -40,10 +40,12 @@ namespace TCGCardCapital.Services.ServiceImpl
 
         public async Task<bool> UpdateCategoryAsync(int id, CategoryDTO categoryDTO)
         {
-            if (id != categoryDTO.CategoryId) return false;
 
-            var category = _mapper.Map<Category>(categoryDTO);
-            _context.Entry(category).State = EntityState.Modified;
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null) return false;
+
+            // Update the necessary fields
+            category.CategoryName = categoryDTO.CategoryName;
 
             try
             {

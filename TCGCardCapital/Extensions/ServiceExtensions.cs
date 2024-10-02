@@ -18,6 +18,7 @@ namespace TCGCardCapital.Extensions
             services.AddScoped<IOrderDetailService, OrderDetailService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IUserRewardService, UserRewardService>();
         }
     }
 }

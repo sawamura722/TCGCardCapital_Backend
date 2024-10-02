@@ -19,5 +19,7 @@ public partial class Reward
 
     public DateTime? UpdatedAt { get; set; }
 
+    public string? ImageUrl { get; set; }
+
     public virtual ICollection<UserReward> UserRewards { get; set; } = new List<UserReward>();
 }

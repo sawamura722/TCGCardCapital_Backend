@@ -78,7 +78,7 @@ namespace TCGCardCapital.Controllers
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteAllCartItem(int userId)
         {
-            if (await _cartitemService.DeleteAllCartItemAsync(userId))
+            if (await _cartitemService.DeleteAllCartItemsAsync(userId))
             {
                 return NoContent();
             }

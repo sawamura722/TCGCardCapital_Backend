@@ -33,8 +33,28 @@ namespace TCGCardCapital.Services.ServiceImpl
         public async Task<OrderDetailDTO> CreateOrderDetailAsync(OrderDetailDTO orderDetailDTO)
         {
             var orderDetail = _mapper.Map<OrderDetail>(orderDetailDTO);
+
+            var product = await _context.Products.FindAsync(orderDetail.ProductId);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+
+            // Check if the product has enough stock
+            if (product.Stock < orderDetail.Quantity)
+            {
+                throw new Exception("Not enough stock for this product");
+            }
+
+            // Decrease the product's stock by the order quantity
+            product.Stock -= orderDetail.Quantity;
+
+            // Add the order detail to the context
             _context.OrderDetails.Add(orderDetail);
+
+            // Save changes for both the order detail and the product
             await _context.SaveChangesAsync();
+
             return _mapper.Map<OrderDetailDTO>(orderDetail);
         }
 
@@ -58,14 +78,6 @@ namespace TCGCardCapital.Services.ServiceImpl
             }
         }
 
-        public async Task<bool> DeleteOrderDetailAsync(int id)
-        {
-            var orderDetail = await _context.OrderDetails.FindAsync(id);
-            if (orderDetail == null) return false;
-
-            _context.OrderDetails.Remove(orderDetail);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+        
     }
 }

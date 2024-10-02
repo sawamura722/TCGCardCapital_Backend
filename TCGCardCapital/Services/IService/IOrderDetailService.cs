@@ -8,6 +8,6 @@ namespace TCGCardCapital.Services.IService
         Task<OrderDetailDTO> GetOrderDetailByIdAsync(int id);
         Task<OrderDetailDTO> CreateOrderDetailAsync(OrderDetailDTO orderDetailDTO);
         Task<bool> UpdateOrderDetailAsync(int id, OrderDetailDTO orderDetailDTO);
-        Task<bool> DeleteOrderDetailAsync(int id);
+     
     }
 }

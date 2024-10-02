@@ -71,17 +71,44 @@ namespace TCGCardCapital.Services.ServiceImpl
             var product = await _context.Products.FindAsync(id);
             if (product == null) return false;
 
+            // If a new image is provided, save it and delete the old one
+            if (productUpdateDTO.Image != null)
+            {
+                // Delete the old image if it exists
+                if (!string.IsNullOrEmpty(product.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", product.ImageUrl);
+                    if (File.Exists(oldImagePath))
+                    {
+                        File.Delete(oldImagePath);
+                    }
+                }
+
+                // Save the new image
+                var fileName = Guid.NewGuid() + Path.GetExtension(productUpdateDTO.Image.FileName);
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+                var uniqueFilePath = Path.Combine(uploadsFolder, fileName);
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                using (var stream = new FileStream(uniqueFilePath, FileMode.Create))
+                {
+                    await productUpdateDTO.Image.CopyToAsync(stream);
+                }
+
+                // Update the product's ImageUrl with the new file name
+                product.ImageUrl = fileName;
+            }
+
             // Update the necessary fields
             product.ProductName = productUpdateDTO.ProductName;
             product.Description = productUpdateDTO.Description;
             product.Price = productUpdateDTO.Price;
             product.Stock = productUpdateDTO.Stock;
             product.CategoryId = productUpdateDTO.CategoryId;
-
-            if (!string.IsNullOrEmpty(productUpdateDTO.ImageUrl))
-            {
-                product.ImageUrl = productUpdateDTO.ImageUrl;
-            }
 
             try
             {
@@ -95,7 +122,6 @@ namespace TCGCardCapital.Services.ServiceImpl
                 throw;
             }
         }
-
 
 
         public async Task<bool> DeleteProductAsync(int id)

@@ -11,6 +11,6 @@ namespace TCGCardCapital.Services.IService
         Task<CartItemDTO> CreateCartItemAsync(CartItemDTO cartItemDTO);
         Task<bool> UpdateCartItemAsync(int userId, int productId, CartItemDTO cartItemDTO);
         Task<bool> DeleteCartItemAsync(int userId, int productId);
-        Task<bool> DeleteAllCartItemAsync(int userId);
+        Task<bool> DeleteAllCartItemsAsync(int userId);
     }
 }
